@@ -26,24 +26,52 @@ async function main() {
         })
     })
 
-    app.post('/item_entry', async function(req,res){
+    app.post('/item_entry', async function (req, res) {
         const db = MongoUtil.getDB();
 
         let description = req.body.description;
-        let books = req.body.books;
+        let book = req.body.books;
         let date = new Date(req.body.date) || new Date();
 
         let result = await db.collection('Comic').insertOne({
             'description': description,
-            'books': books,
-            'date':date
+            'book': book,
+            'date': date
         })
         res.json(result)
     })
-}
+
+    // ALLOWS USERS TO SEARCH
+    app.get('/item_entry', async function (req, res) {
+        const db = MongoUtil.getDB();
+        // db.collection('Comic').find({
+   
+        console.log(req.query);
+      
+        let criteria = {};
+
+        if (req.query.description) {
+            criteria["description"] = {
+                '$regex': req.query.description,
+                '$options': 'i'
+            }
+        }
+
+        if (req.query.book) {
+            criteria["book"] = {
+                "$in": [req.query.book]
+            }
+        }
+
+        let results = await db.collection('Comic').find(criteria).toArray();
+        res.json(results);
+    })
+
+
+} 
 main();
 
 // START SERVER
 app.listen(3000, function (req, res) {
     console.log("Server Started")
-})   
+})    
