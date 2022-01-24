@@ -7,6 +7,7 @@ const cors = require('cors');
 
 // IMPORT MONGOUTIL OBJ
 const MongoUtil = require('./MongoUtil');
+const { ObjectId } = require('mongodb');
 
 let app = express();
 app.use(express.json());
@@ -33,21 +34,30 @@ async function main() {
         let book = req.body.books;
         let date = new Date(req.body.date) || new Date();
 
-        let result = await db.collection('Comic').insertOne({
-            'description': description,
-            'book': book,
-            'date': date
-        })
-        res.json(result)
+        try {
+            let result = await db.collection('Comic').insertOne({
+                'description': description,
+                'book': book,
+                'date': date
+            })
+            res.json(result)
+        }
+        catch (e) {
+            res.status(500);
+            // 500 = internal server error
+            res.json({
+                'error': "Failed to add entry"
+            })
+        }
     })
 
-    // ALLOWS USERS TO SEARCH
+    // SEARCH - Endpoint
     app.get('/item_entry', async function (req, res) {
         const db = MongoUtil.getDB();
         // db.collection('Comic').find({
-   
+
         console.log(req.query);
-      
+
         let criteria = {};
 
         if (req.query.description) {
@@ -67,11 +77,42 @@ async function main() {
         res.json(results);
     })
 
+    // UPDATE - Endpoint
+    app.put('/item_entry/:id', async function (req, res) {
+        try {
+            await db.collection('Comic').updateOne({
+                '_id': ObjectId(req.params.id)
+            }, {
+                'description': req.body.description,
+                'book': req.body.book,
+                'date': new Date(req.body.date) || new Date()
+            })
+            res.json({
+                'message': "Success"
+            })
+        }
+        catch (e) {
+            res.status(500);
+            res.json({
+                'message': "Unable to update Entry"
+            })
+        }
+    })
 
-} 
+    // DELETE - Endpoint
+    app.delete('/item_entry/:id', async function(req,res){
+        const db = MongoUtil.getDB();
+        await db.collection('Comic').remove({
+            '_id':ObjectId(req.params.id)
+        })
+        res.json({
+            'message':"record has been deleted"
+        })
+    })
+}
 main();
-
-// START SERVER
-app.listen(3000, function (req, res) {
-    console.log("Server Started")
-})    
+ 
+    // START SERVER
+    app.listen(3000, function (req, res) {
+        console.log("Server Started")
+    })
