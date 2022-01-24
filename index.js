@@ -30,15 +30,24 @@ async function main() {
     app.post('/item_entry', async function (req, res) {
         const db = MongoUtil.getDB();
 
-        let description = req.body.description;
-        let book = req.body.books;
-        let date = new Date(req.body.date) || new Date();
+        let bookName = req.body.bookName;
+        let issueNumber = req.body.issueNumber;
+        let publisher = req.body.publisher;
+        let writer = req.body.writer;
+        let imageLink = req.body.imageLink;
+        let review = req.body.review;
+        let rating = req.body.rating;
+        
 
         try {
             let result = await db.collection('Comic').insertOne({
-                'description': description,
-                'book': book,
-                'date': date
+                'bookName': bookName,
+                'issueNumber': issueNumber,
+                'publisher': publisher,
+                'writer': writer,
+                'imageLink':imageLink,
+                'review':review,
+                'rating':rating
             })
             res.json(result)
         }
@@ -61,15 +70,51 @@ async function main() {
         let criteria = {};
 
         if (req.query.description) {
-            criteria["description"] = {
+            criteria["bookName"] = {
                 '$regex': req.query.description,
                 '$options': 'i'
             }
         }
 
-        if (req.query.book) {
-            criteria["book"] = {
-                "$in": [req.query.book]
+
+        if (req.query.description) {
+            criteria["issueNumber"] = {
+                '$regex': req.query.description,
+                '$options': 'i'
+            }
+        }
+
+        if (req.query.description) {
+            criteria["publisher"] = {
+                '$regex': req.query.description,
+                '$options': 'i'
+            }
+        }
+
+        if (req.query.description) {
+            criteria["writer"] = {
+                '$regex': req.query.description,
+                '$options': 'i'
+            }
+        }
+
+        if (req.query.description) {
+            criteria["imageLink"] = {
+                '$regex': req.query.description,
+            }
+        }
+
+        if (req.query.description) {
+            criteria["review"] = {
+                '$regex': req.query.description,
+                '$options': 'i'
+            }
+        }
+
+        if (req.query.description) {
+            criteria["rating"] = {
+                '$regex': req.query.description,
+                '$options': 'i'
             }
         }
 
@@ -83,9 +128,13 @@ async function main() {
             await db.collection('Comic').updateOne({
                 '_id': ObjectId(req.params.id)
             }, {
-                'description': req.body.description,
-                'book': req.body.book,
-                'date': new Date(req.body.date) || new Date()
+                'bookName' : req.body.bookName,
+                'issueNumber' : req.body.issueNumber,
+                'publisher' : req.body.publisher,
+                'writer' : req.body.writer,
+                'imageLink' : req.body.imageLink,
+                'review' : req.body.review,
+                'rating' : req.body.rating
             })
             res.json({
                 'message': "Success"
@@ -106,7 +155,7 @@ async function main() {
             '_id':ObjectId(req.params.id)
         })
         res.json({
-            'message':"record has been deleted"
+            'message':"Entry has been deleted"
         })
     })
 }
