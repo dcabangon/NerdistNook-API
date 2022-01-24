@@ -7,7 +7,7 @@ const cors = require('cors');
 
 // IMPORT MONGOUTIL OBJ
 const MongoUtil = require('./MongoUtil');
-const { ObjectId } = require('mongodb');
+const { ObjectId } = require('bson');
 
 let app = express();
 app.use(express.json());
