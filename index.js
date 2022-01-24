@@ -37,7 +37,7 @@ async function main() {
         let imageLink = req.body.imageLink;
         let review = req.body.review;
         let rating = req.body.rating;
-        
+
 
         try {
             let result = await db.collection('Comic').insertOne({
@@ -45,9 +45,9 @@ async function main() {
                 'issueNumber': issueNumber,
                 'publisher': publisher,
                 'writer': writer,
-                'imageLink':imageLink,
-                'review':review,
-                'rating':rating
+                'imageLink': imageLink,
+                'review': review,
+                'rating': rating
             })
             res.json(result)
         }
@@ -128,13 +128,13 @@ async function main() {
             await db.collection('Comic').updateOne({
                 '_id': ObjectId(req.params.id)
             }, {
-                'bookName' : req.body.bookName,
-                'issueNumber' : req.body.issueNumber,
-                'publisher' : req.body.publisher,
-                'writer' : req.body.writer,
-                'imageLink' : req.body.imageLink,
-                'review' : req.body.review,
-                'rating' : req.body.rating
+                'bookName': req.body.bookName,
+                'issueNumber': req.body.issueNumber,
+                'publisher': req.body.publisher,
+                'writer': req.body.writer,
+                'imageLink': req.body.imageLink,
+                'review': req.body.review,
+                'rating': req.body.rating
             })
             res.json({
                 'message': "Success"
@@ -149,19 +149,27 @@ async function main() {
     })
 
     // DELETE - Endpoint
-    app.delete('/item_entry/:id', async function(req,res){
-        const db = MongoUtil.getDB();
-        await db.collection('Comic').remove({
-            '_id':ObjectId(req.params.id)
-        })
-        res.json({
-            'message':"Entry has been deleted"
-        })
+    app.delete('/item_entry/:id', async function (req, res) {
+        try {
+            const db = MongoUtil.getDB();
+            await db.collection('Comic').remove({
+                '_id': ObjectId(req.params.id)
+            })
+            res.json({
+                'message': "Entry has been deleted"
+            })
+        }
+        catch (e) {
+            res.status(500);
+            res.json({
+                'message': "Unable to delete Entry"
+            })
+        }
     })
 }
 main();
- 
-    // START SERVER
-    app.listen(3000, function (req, res) {
-        console.log("Server Started")
-    })
+
+// START SERVER
+app.listen(3000, function (req, res) {
+    console.log("Server Started")
+})
