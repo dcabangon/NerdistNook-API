@@ -69,51 +69,51 @@ async function main() {
 
         let criteria = {};
 
-        if (req.query.description) {
+        if (req.query.bookName) {
             criteria["bookName"] = {
-                '$regex': req.query.description,
+                '$regex': req.query.bookName,
                 '$options': 'i'
             }
         }
 
 
-        if (req.query.description) {
+        if (req.query.issueNumber) {
             criteria["issueNumber"] = {
-                '$regex': req.query.description,
+                '$regex': req.query.issueNumber,
                 '$options': 'i'
             }
         }
 
-        if (req.query.description) {
+        if (req.query.publisher) {
             criteria["publisher"] = {
-                '$regex': req.query.description,
+                '$regex': req.query.publisher,
                 '$options': 'i'
             }
         }
 
-        if (req.query.description) {
+        if (req.query.writer) {
             criteria["writer"] = {
-                '$regex': req.query.description,
+                '$regex': req.query.writer,
                 '$options': 'i'
             }
         }
 
-        if (req.query.description) {
+        if (req.query.imageLink) {
             criteria["imageLink"] = {
-                '$regex': req.query.description,
+                '$regex': req.query.imageLink,
             }
         }
 
-        if (req.query.description) {
+        if (req.query.review) {
             criteria["review"] = {
-                '$regex': req.query.description,
+                '$regex': req.query.review,
                 '$options': 'i'
             }
         }
 
-        if (req.query.description) {
+        if (req.query.rating) {
             criteria["rating"] = {
-                '$regex': req.query.description,
+                '$regex': req.query.rating,
                 '$options': 'i'
             }
         }
