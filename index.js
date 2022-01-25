@@ -26,7 +26,7 @@ async function main() {
             "message": "Hello from my API "
         })
     })
-
+    // INSERT - Endpoint
     app.post('/item_entry', async function (req, res) {
         const db = MongoUtil.getDB();
 
@@ -63,7 +63,6 @@ async function main() {
     // SEARCH - Endpoint
     app.get('/item_entry', async function (req, res) {
         const db = MongoUtil.getDB();
-        // db.collection('Comic').find({
 
         console.log(req.query);
 
@@ -116,8 +115,7 @@ async function main() {
                 '$regex': req.query.rating,
                 '$options': 'i'
             }
-        }
-
+        } 
         let results = await db.collection('Comic').find(criteria).toArray();
         res.json(results);
     })
