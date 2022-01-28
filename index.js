@@ -27,7 +27,7 @@ async function main() {
         })
     })
     // INSERT - Endpoint
-    app.post('/item_entry', async function (req, res) {
+    app.post('/books', async function (req, res) {
         const db = MongoUtil.getDB();
 
         let bookName = req.body.bookName;
@@ -61,7 +61,7 @@ async function main() {
     })
 
     // SEARCH - Endpoint
-    app.get('/item_entry', async function (req, res) {
+    app.get('/books', async function (req, res) {
         const db = MongoUtil.getDB();
 
         console.log(req.query);
@@ -120,8 +120,20 @@ async function main() {
         res.json(results);
     })
 
+    // SEARCH BY ID - Endpoint
+    app.get('/books/:id', async function(req,res){
+        // get instance of Mongo db
+        const db = MongoUtil.getDB();
+        let result = await db.collection('Comic').findOne({
+            '_id':ObjectId(req.params.id)
+        });
+        res.json({
+            'book': result
+        })  
+    })
+
     // UPDATE - Endpoint
-    app.put('/item_entry/:id', async function (req, res) {
+    app.put('/books/:id', async function (req, res) {
         try {
             await db.collection('Comic').updateOne({
                 '_id': ObjectId(req.params.id)
@@ -147,7 +159,7 @@ async function main() {
     })
 
     // DELETE - Endpoint
-    app.delete('/item_entry/:id', async function (req, res) {
+    app.delete('/books/:id', async function (req, res) {
         try {
             const db = MongoUtil.getDB();
             await db.collection('Comic').remove({
