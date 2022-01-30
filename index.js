@@ -115,21 +115,21 @@ async function main() {
                 '$regex': req.query.rating,
                 '$options': 'i'
             }
-        } 
+        }
         let results = await db.collection('Comic').find(criteria).toArray();
         res.json(results);
     })
 
     // SEARCH BY ID - Endpoint
-    app.get('/books/:id', async function(req,res){
+    app.get('/books/:id', async function (req, res) {
         // get instance of Mongo db
         const db = MongoUtil.getDB();
         let result = await db.collection('Comic').findOne({
-            '_id':ObjectId(req.params.id)
+            '_id': ObjectId(req.params.id)
         });
         res.json({
             'book': result
-        })  
+        })
     })
 
     // UPDATE - Endpoint
@@ -156,6 +156,22 @@ async function main() {
                 'message': "Unable to update Entry"
             })
         }
+    })
+
+    // UPDATE using API
+    app.patch('/books/:id', async (req, res) => {
+        const db = MongoUtil.getDB();
+        let results = await db.collection('Comic').updateOne({
+            '_id': new ObjectId(req.params.id),
+        }, {
+            '$set': {
+                'bookName': req.body.bookName,
+                'publisher': req.body.publisher
+            }
+        })
+        res.json({
+            'status': true
+        })
     })
 
     // DELETE - Endpoint
