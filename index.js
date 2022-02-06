@@ -166,7 +166,9 @@ async function main() {
         }, {
             '$set': {
                 'bookName': req.body.bookName,
-                'publisher': req.body.publisher
+                'publisher': req.body.publisher,
+                'rating': req.body.rating,
+                'imageLink': req.body.imageLink
             }
         })
         res.json({
@@ -196,6 +198,6 @@ async function main() {
 main();
 
 // START SERVER
-app.listen(3000, function (req, res) {
+app.listen(process.env.PORT, function (req, res) {
     console.log("Server Started")
 })
